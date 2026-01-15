@@ -1,2 +1,3 @@
-def test_smoke():
-    assert 1 + 1 == 2
+d ={1,2,6,7}
+
+print(d.get(1))
