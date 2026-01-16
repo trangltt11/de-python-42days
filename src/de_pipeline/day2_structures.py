@@ -107,6 +107,16 @@ def main() -> None:
     print("---------------------------------------------------")
     a={k: v for k, v in dict_event.items() if v >= 2}
     print(a)
+    #Level 5 — Group by nhiều cột bằng tuple key (khó)
+    count_by_user_event={}
+    amount_by_user_evnet={}
+    for i in records:
+        ii=(i.get("user_id"),i.get("event"))
+        amt=i.get("amount")
+        count_by_user_event[ii]=count_by_user_event.get(ii,0)+1
+        amount_by_user_evnet[ii]=amount_by_user_evnet.get(ii,0)+amt
+    print(count_by_user_event)
+    print(amount_by_user_evnet)
        
         
 
