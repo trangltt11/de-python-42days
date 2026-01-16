@@ -117,7 +117,18 @@ def main() -> None:
         amount_by_user_evnet[ii]=amount_by_user_evnet.get(ii,0)+amt
     print(count_by_user_event)
     print(amount_by_user_evnet)
-       
+   #Level 6 — Comprehension nâng dần (khó hơn một chút)
+    #Bài 6.1 Tạo list purchase_amounts chỉ gồm amount của purchase (dùng list comprehension).
+    purchase_amounts=[i.get("amount") for i in records if i.get("event")=="purchase"]
+    print('----------------')
+    print(purchase_amounts)
+    #Bài 6.2 Tạo dict user_to_purchase_count bằng dict comprehension nếu bạn làm được.
+    user_to_purchase_count={}
+    records_purchase=[i for i in records if i.get("event")=='purchase']
+    for i in records_purchase:
+        key=i.get("user_id")
+        user_to_purchase_count[key]=user_to_purchase_count.get(key,0)+amt
+    print(user_to_purchase_count)    
         
 
 
