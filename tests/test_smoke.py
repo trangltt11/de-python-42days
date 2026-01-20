@@ -1,3 +1,13 @@
-d ={1,2,6,7}
-
-print(d.get(1))
+records=[{"event_id":"e001","user_id":"u1","event":"view","amount":0,"ts":"2026-01-13T09:00:00+07:00"},
+{"event_id":"e002","user_id":"u1","event":"purchase","amount":120.5,"ts":"2026-01-13T09:02:00+07:00"},
+{"event_id":"e003","user_id":"u2","event":"purchase","amount":75.0,"ts":"2026-01-13T09:05:00+07:00"},
+{"event_id":"e004","user_id":"u2","event":"view","amount":0,"ts":"2026-01-13T09:06:00+07:00"},
+{"event_id":"e005","user_id":"u1","event":"purchase","amount":30.0,"ts":"2026-01-13T10:01:00+07:00"},
+{"event_id":"e006","user_id":"u3","event":"refund","amount":-30.0,"ts":"2026-01-13T10:10:00+07:00"},
+{"event_id":"e007","user_id":"u3","event":"purchase","amount":200.0,"ts":"2026-01-13T10:12:00+07:00"},
+{"event_id":"e008","user_id":"u3","event":"purchase","amount":200.0,"ts":"2026-01-13T10:12:00+07:00"},
+{"event_id":"e008","user_id":"u3","event":"purchase","amount":200.0,"ts":"2026-01-13T10:12:00+07:00"},
+{"event_id":"e009","user_id":"u2","event":"purchase","amount":15.0,"ts":"2026-01-13T11:00:00+07:00"}
+]
+len(records)
+print(len(records))

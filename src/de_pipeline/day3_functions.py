@@ -42,24 +42,24 @@ print("------------------------")
 print(deduped_record(records))
 print("------------------------") 
 #Bài 1.2 Dùng filter_records(deduped, filter_fn) để lấy refunds và tính tổng refund amount.
-def filter_records (r:records)->float:
+def event_amount (r:records,event:str)->float:
     a=deduped_record(records)
-    refund_records=[i for i in a if filter_fn(i,"refund")]
+    refund_records=[i for i in a if filter_fn(i,event)]
     return (sum(i.get("amount") for i in refund_records))
-print(filter_records(records))
+print("event_amount",event_amount(records,"purchase"))
 #Bài 2.1 Viết hàm
 """Ví dụ: đếm số event theo user_id
 
 Nếu có filter_fn, chỉ đếm record thỏa điều kiện"""
-def group_count(r:records, group_key:str) -> dict:
+def group_count(r:records, group_key:str,event:str,filter_fn_event: Callable[[Record,str], bool]) -> dict:
 
     dict_user_event={}
-    list_event_purchase:list[dict]=[i for i in r if filter_fn(i,"purchase") ]
+    list_event_purchase:list[dict]=[i for i in r if filter_fn_event(i,event) ]
     for i in list_event_purchase:
         key=i.get("user_id")
         dict_user_event[key]= dict_user_event.get(key,0)+1
     return dict_user_event
-print(group_count(records,"user_id"))
+print(group_count(records,"user_id","purchase",filter_fn))
 """Bài 3.1 Viết hàm normalize_record(r) trả dict mới (không sửa r gốc) với:
 
 amount: luôn là float (dùng safe_float)
@@ -80,3 +80,20 @@ def normalize_record(r: Record) -> Record:
 
 new=[normalize_record (i) for i in records ] 
 print(new)
+
+def run_pipeline(path: Path) -> dict:
+    records = read_jsonl(path)
+    return {
+      "total_records": len(records),
+      "after_dedupe":  len(deduped_record(records)),
+      "purchase_total": event_amount(records,"purchase"),
+      "purchase_by_user": group_count(records,"user_id","purchase",filter_fn)
+    }
+def main() -> None:
+    path = Path("data/raw/day2_events.jsonl")
+    
+    print("kq",run_pipeline(path) )
+
+if __name__ == "__main__":
+    main()
+    
