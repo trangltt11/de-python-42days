@@ -60,4 +60,23 @@ def group_count(r:records, group_key:str) -> dict:
         dict_user_event[key]= dict_user_event.get(key,0)+1
     return dict_user_event
 print(group_count(records,"user_id"))
+"""Bài 3.1 Viết hàm normalize_record(r) trả dict mới (không sửa r gốc) với:
 
+amount: luôn là float (dùng safe_float)
+
+event: lower-case (vd "Purchase" → "purchase")
+
+thiếu event_id hoặc user_id thì raise ValueError"""
+def safe_float(x:Any)->float:
+    try:
+        return float(x)
+    except (TypeError, ValueError):
+        return 0.0
+    
+def normalize_record(r: Record) -> Record:
+    if "event_id" not in r or "user_id" not in r:
+          raise ValueError("record can co key event_id va user_id")
+    return {**r, "amount": float(r.get("amount")),"event": r.get("event").lower()}
+
+new=[normalize_record (i) for i in records ] 
+print(new)
