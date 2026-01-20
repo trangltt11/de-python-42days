@@ -107,7 +107,28 @@ def main() -> None:
     print("---------------------------------------------------")
     a={k: v for k, v in dict_event.items() if v >= 2}
     print(a)
-       
+    #Level 5 — Group by nhiều cột bằng tuple key (khó)
+    count_by_user_event={}
+    amount_by_user_evnet={}
+    for i in records:
+        ii=(i.get("user_id"),i.get("event"))
+        amt=i.get("amount")
+        count_by_user_event[ii]=count_by_user_event.get(ii,0)+1
+        amount_by_user_evnet[ii]=amount_by_user_evnet.get(ii,0)+amt
+    print(count_by_user_event)
+    print(amount_by_user_evnet)
+   #Level 6 — Comprehension nâng dần (khó hơn một chút)
+    #Bài 6.1 Tạo list purchase_amounts chỉ gồm amount của purchase (dùng list comprehension).
+    purchase_amounts=[i.get("amount") for i in records if i.get("event")=="purchase"]
+    print('----------------')
+    print(purchase_amounts)
+    #Bài 6.2 Tạo dict user_to_purchase_count bằng dict comprehension nếu bạn làm được.
+    user_to_purchase_count={}
+    records_purchase=[i for i in records if i.get("event")=='purchase']
+    for i in records_purchase:
+        key=i.get("user_id")
+        user_to_purchase_count[key]=user_to_purchase_count.get(key,0)+amt
+    print(user_to_purchase_count)    
         
 
 
