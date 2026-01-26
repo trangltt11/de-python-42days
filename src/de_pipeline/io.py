@@ -13,3 +13,7 @@ def read_jsonl(path: Path) -> list[Record]:
                 continue
             records.append(json.loads(line))
     return records
+
+def write_jsonl(path: str, r: Record) -> None:
+      with open(path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(r, ensure_ascii=False) + "\n")

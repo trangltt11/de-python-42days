@@ -1,0 +1,2 @@
+{"event_id": "aa09", "user_id": "u1", "event": "view", "amount": 0, "ts": "2026-01-13T09:00:00+07:00"}
+{"event_id": "ae09", "user_id": "u2", "event": "purchase", "amount": 15.0, "ts": "2026-01-13T11:00:00+07:00"}

@@ -5,7 +5,10 @@ from typing import Any
 
 from .types_def import Record
 from .ops import safe_float
+from .io import write_jsonl
 
+import json
+from typing import Callable, Any
 
 class RecordValidationError(ValueError):
     """Lỗi validation cho một record (dữ liệu không hợp lệ)."""
@@ -66,6 +69,9 @@ def validate_amount(r: Record) -> None:
         raise RecordValidationError("refund must have amount < 0")
 
 
+
+
+
 def validate_record(r: Record) -> None:
     """Validate đầy đủ 1 record. Nếu sai -> raise RecordValidationError."""
     require_keys(r)
@@ -73,7 +79,7 @@ def validate_record(r: Record) -> None:
     validate_amount(r)
 
 
-def validate_records(records: list[Record]) -> tuple[list[Record], list[ValidationResult]]:
+def validate_records(records: list[Record], path:str) -> tuple[list[Record], list[ValidationResult]]:
     """
     Validate nhiều record:
     - Trả về (valid_records, results)
@@ -89,5 +95,5 @@ def validate_records(records: list[Record]) -> tuple[list[Record], list[Validati
             results.append(ValidationResult(ok=True))
         except RecordValidationError as e:
             results.append(ValidationResult(ok=False, error_type=type(e).__name__, message=str(e) ))
-
+            write_jsonl(path,r)
     return valid, results
