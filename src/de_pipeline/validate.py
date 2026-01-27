@@ -96,4 +96,6 @@ def validate_records(records: list[Record], path:str) -> tuple[list[Record], lis
         except RecordValidationError as e:
             results.append(ValidationResult(ok=False, error_type=type(e).__name__, message=str(e) ))
             write_jsonl(path,r)
+            a=records.index(r) 
+            raise RecordValidationError(f"Invalid at index i: {a}")
     return valid, results

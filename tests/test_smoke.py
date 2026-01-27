@@ -15,11 +15,4 @@ def require_keys(r):
 
 
 
-vr = ValidationResult(False, "X", "Y")
-results = [vr]
-
-print(results )
-print(results[0])        # <class 'ValidationResult'>
-print(results[0].ok)           # False
-print(results[0].error_type)   # X
-print(results[0].message)      # Y
+a=require_keys({})

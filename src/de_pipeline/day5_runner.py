@@ -35,6 +35,7 @@ def main() -> None:
     print("Purchase total by user:", purchase_by_user)
 
 
+
 if __name__ == "__main__":
     main()
     
