@@ -1,18 +1,15 @@
-
-from dataclasses import dataclass
-@dataclass(frozen=True)
-class ValidationResult(ValueError):
-    ok: bool
-    error_type: str | None = None
-    message: str | None = None
-
-def require_keys(r):
-    missing = ["user_id"]
-    if "user_id" not in r:
-        raise ValidationResult("looix")
+class RecordValidationError(ValueError):
+    """Lỗi validation cho một record (dữ liệu không hợp lệ)."""
+def must_be_positive(x:float)->float:
+    if x<0:
+        raise RecordValidationError(" must be > 0")
+    return x
 
 
 
+a={"event_id":"aa09","user_id":"a","event":'4',"amount":0,"ts":"2026-01-13T09:00:00+07:00"}
 
 
-a=require_keys({})
+user_id=str(a.get("user_id","u"))
+
+print(user_id)

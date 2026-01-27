@@ -68,7 +68,10 @@ def validate_amount(r: Record) -> None:
     if event == "refund" and amt >= 0:
         raise RecordValidationError("refund must have amount < 0")
 
-
+def user_id(r:Record)->None:
+    user_id=str(r.get("user_id","a"))
+    if user_id.startswith("u") or  not user_id[1:].isdigit() or user_id.strip() == '' :
+        raise RecordValidationError(f"user_id '{user_id}' value must start with e and follow with number")
 
 
 
@@ -77,6 +80,7 @@ def validate_record(r: Record) -> None:
     require_keys(r)
     validate_event(r)
     validate_amount(r)
+    user_id(r)
 
 
 def validate_records(records: list[Record], path:str) -> tuple[list[Record], list[ValidationResult]]:
@@ -96,6 +100,5 @@ def validate_records(records: list[Record], path:str) -> tuple[list[Record], lis
         except RecordValidationError as e:
             results.append(ValidationResult(ok=False, error_type=type(e).__name__, message=str(e) ))
             write_jsonl(path,r)
-            a=records.index(r) 
-            raise RecordValidationError(f"Invalid at index i: {a}")
+            
     return valid, results

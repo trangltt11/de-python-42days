@@ -27,7 +27,6 @@ def main() -> None:
     # Đếm loại lỗi
     error_types = [r for r in results if not r.ok]
     print("Error types:", len(error_types))
-    print("Error types records:", results)
 
 
     # Chạy aggregate trên valid records
