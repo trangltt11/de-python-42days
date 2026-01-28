@@ -33,6 +33,8 @@ def main() -> None:
     purchase_by_user = group_sum(valid, "user_id", "amount", filter_fn=is_purchase)
     print("Purchase total by user:", purchase_by_user)
 
+    print(valid, results)
+
 
 
 if __name__ == "__main__":

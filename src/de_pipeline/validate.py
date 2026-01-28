@@ -6,6 +6,7 @@ from typing import Any
 from .types_def import Record
 from .ops import safe_float
 from .io import write_jsonl
+from datetime import datetime
 
 import json
 from typing import Callable, Any
@@ -70,10 +71,16 @@ def validate_amount(r: Record) -> None:
 
 def user_id(r:Record)->None:
     user_id=str(r.get("user_id","a"))
-    if user_id.startswith("u") or  not user_id[1:].isdigit() or user_id.strip() == '' :
-        raise RecordValidationError(f"user_id '{user_id}' value must start with e and follow with number")
+    if not user_id.startswith("u") or  not user_id[1:].isdigit() or user_id.strip() == '' :
+        raise RecordValidationError(f"user_id '{user_id}' value must start with u and follow with number")
 
-
+def validate_ts(r:Record)-> None:
+    ts= r.get("ts","")
+    try:
+        convert_ts=datetime.fromisoformat(ts)
+    except:
+        raise RecordValidationError("invalid ts format")
+    
 
 def validate_record(r: Record) -> None:
     """Validate đầy đủ 1 record. Nếu sai -> raise RecordValidationError."""
@@ -81,7 +88,7 @@ def validate_record(r: Record) -> None:
     validate_event(r)
     validate_amount(r)
     user_id(r)
-
+    validate_ts(r)
 
 def validate_records(records: list[Record], path:str) -> tuple[list[Record], list[ValidationResult]]:
     """
