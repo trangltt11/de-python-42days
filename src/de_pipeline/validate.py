@@ -78,10 +78,11 @@ def validate_ts(r:Record)-> None:
     ts= r.get("ts","")
     try:
         convert_ts=datetime.fromisoformat(ts)
-        if convert_ts.tzinfo is None:
-                raise RecordValidationError("Timestamp must include timezone (e.g., +07:00 or Z)")
-    except:
-        raise ValueError ("invalid ts format")
+       
+    except ValueError  as e :
+        raise RecordValidationError("invalid ts format") from e
+    if convert_ts.tzinfo is None:
+         raise RecordValidationError("Timestamp must include timezone (e.g., +07:00 or Z)")
     
 
 def validate_record(r: Record) -> None:
