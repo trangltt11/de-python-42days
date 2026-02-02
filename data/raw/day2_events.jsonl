@@ -1,4 +1,5 @@
-{"event_id":"aa09","user_id":"u1","event":"","amount":0,"ts":"2026-01-13T09:00:00+07"}
+"event_id":"aa09","user_id":"u1","event":"","amount":0,"ts":"2026-01-13T09:00:00+07"
+
 {"event_id":"e002","user_id":"u1","event":"Purchase","amount":120.5,"ts":"2026-01-13"}
 {"event_id":"e003","user_id":"u2","event":"purchase","amount":75.0,"ts":"2026-01-13T09:05:00+07:00"}
 {"event_id":"e004","user_id":"u2","event":"view","amount":0,"ts":"2026-01-13T09:06:00+07:00"}
