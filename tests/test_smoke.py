@@ -1,13 +1,18 @@
-
-import json
 from pathlib import Path
+path:Path=Path(r"D:\python tutorial\de-python-42days\data\bad\day6_bad_records.jsonl")
+path.parent.mkdir(parents=True, exist_ok=True)
 
-path = Path(r"E:\py file\LEAR PYTHON\de-python-42days\data\raw\day2_events.jsonl")
-records: list[dict] = []
-with path.open("r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-            records.append(json.loads(line))
-print(records)
+file_path = path / "day6_bad_records.jsonl"
+
+if file_path.exists() and file_path.is_file():
+    print("File tồn tại:", file_path)
+else:
+    print("Không tồn tại")
+
+
+from datetime import date
+
+d = date(2026, 1, 13)
+s = d.strftime("%Y-%m-%d")
+print(s)  # "2026-01-13"
+s = d.strftime("%Y-%m-%d")
