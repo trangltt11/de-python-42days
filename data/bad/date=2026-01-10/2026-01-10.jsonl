@@ -1,0 +1,8 @@
+{"event_id": "e002", "user_id": "u1", "event": "Purchase", "amount": 120.5, "ts": "2026-01-10"}
+{"event_id": "ae09", "user_id": "uu", "event": "purchase", "amount": 15.0, "ts": "2026-01-10T11:00:00+07:00"}
+{"event_id": "e002", "user_id": "u1", "event": "Purchase", "amount": 120.5, "ts": "2026-01-10"}
+{"event_id": "ae09", "user_id": "uu", "event": "purchase", "amount": 15.0, "ts": "2026-01-10T11:00:00+07:00"}
+{"event_id": "e002", "user_id": "u1", "event": "Purchase", "amount": 120.5, "ts": "2026-01-10"}
+{"event_id": "ae09", "user_id": "uu", "event": "purchase", "amount": 15.0, "ts": "2026-01-10T11:00:00+07:00"}
+{"event_id": "e002", "user_id": "u1", "event": "Purchase", "amount": 120.5, "ts": "2026-01-10"}
+{"event_id": "ae09", "user_id": "uu", "event": "purchase", "amount": 15.0, "ts": "2026-01-10T11:00:00+07:00"}

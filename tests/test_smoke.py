@@ -1,18 +1,12 @@
-from pathlib import Path
-path:Path=Path(r"D:\python tutorial\de-python-42days\data\bad\day6_bad_records.jsonl")
-path.parent.mkdir(parents=True, exist_ok=True)
+import pandas as pd
+r = {"event_id":"e002","user_id":"u1","event":"Purchase","amount":120.5,"ts":"2026-01-10"}
+a=list[r]
+b=list(r)
+print("--------------------------------")
+print(a)
+print("--------------------------------")
+print(type(a))
+print("--------------------------------")
 
-file_path = path / "day6_bad_records.jsonl"
-
-if file_path.exists() and file_path.is_file():
-    print("File tồn tại:", file_path)
-else:
-    print("Không tồn tại")
-
-
-from datetime import date
-
-d = date(2026, 1, 13)
-s = d.strftime("%Y-%m-%d")
-print(s)  # "2026-01-13"
-s = d.strftime("%Y-%m-%d")
+df = pd.DataFrame([r])
+print(df)
