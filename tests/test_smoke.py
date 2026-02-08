@@ -1,12 +1,11 @@
-import pandas as pd
-r = {"event_id":"e002","user_id":"u1","event":"Purchase","amount":120.5,"ts":"2026-01-10"}
-a=list[r]
-b=list(r)
-print("--------------------------------")
-print(a)
-print("--------------------------------")
-print(type(a))
-print("--------------------------------")
+from zoneinfo import ZoneInfo
+from datetime import datetime, timezone
 
-df = pd.DataFrame([r])
-print(df)
+
+ts="2026-01-13T09:00:00+07:00"
+dt=datetime.fromisoformat(ts)
+if dt.tzinfo is None:
+    raise ValueError("ts must include timezone offset, e.g. +07:00")
+BKK = ZoneInfo("Asia/Bangkok")  # timezone của bạn
+dtbk=dt.astimezone(BKK)
+print(dt, dtbk)
