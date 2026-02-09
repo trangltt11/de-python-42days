@@ -1,12 +1,2 @@
-import pandas as pd
-r = {"event_id":"e002","user_id":"u1","event":"Purchase","amount":120.5,"ts":"2026-01-10"}
-a=list[r]
-b=list(r)
-print("--------------------------------")
-print(a)
-print("--------------------------------")
-print(type(a))
-print("--------------------------------")
-
-df = pd.DataFrame([r])
-print(df)
+a={'event_id': 'e001', 'user_id': 'u1', 'event': 'Purchase', 'amount': 120.5, 'ts': '2026-01-11T09:05:00+07:00', 'event_date': '2026-01-11', 'event_hour': '09', 'event_minute': '05'}
+print(a['event_id'])
