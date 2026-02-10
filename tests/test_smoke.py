@@ -1,11 +1,16 @@
-from zoneinfo import ZoneInfo
-from datetime import datetime, timezone
+import pandas as pd
 
+df = pd.DataFrame([
+    {"event_id": "e001", "user_id": "u1", "event": "purchase", "amount": 10, "ts": "2026-01-10"},
+    {"event_id": "e002", "user_id": "u2", "event": "refund",   "amount":  5, "ts": "2026-01-10"},
+    {"event_id": "e002", "user_id": "u3", "event": "purchase", "amount": 12, "ts": "2026-01-11"},
+    {"event_id": "e003", "user_id": "u1", "event": "purchase", "amount": 20, "ts": "2026-01-12"},
+    {"event_id": "e003", "user_id": "u1", "event": "purchase", "amount": 20, "ts": "2026-01-12"},
+])
+dup_mask = df["event_id"].duplicated(keep=False)
+print(dup_mask)
 
-ts="2026-01-13T09:00:00+07:00"
-dt=datetime.fromisoformat(ts)
-if dt.tzinfo is None:
-    raise ValueError("ts must include timezone offset, e.g. +07:00")
-BKK = ZoneInfo("Asia/Bangkok")  # timezone của bạn
-dtbk=dt.astimezone(BKK)
-print(dt, dtbk)
+print(df.loc[dup_mask, ["event_id", "user_id", "event", "amount", "ts"]])
+
+df.info()
+
