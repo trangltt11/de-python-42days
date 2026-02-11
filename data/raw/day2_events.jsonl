@@ -8,7 +8,7 @@
 {"event_id":"e008","user_id":"u3","event":"purchase","amount":200.0,"ts":"2026-01-12T10:12:00+07:00"}
 {"event_id":"e008","user_id":"u3","event":"purchase","amount":200.0,"ts":"2026-01-11T10:12:00+07:00"}
 {"event_id":"e009","user_id":"u2","event":"purchase","amount":15.0,"ts":"2026-01-10T11:00:00+07:00"}
-{"event_id":"ae09","user_id":"uu","event":"purchase","amount":15.0,"ts":"2026-01-10T11:00:00+07:00"}
+{"event_id":"ae09","user_id":"u2","event":"purchase","amount":15.0,"ts":"2026-01-10T11:00:00+07:00"}
 {"event_id": "e010", "user_id": "u2", "event": "purchase", "amount": 15.0, "ts": "2026-01-13T11:00:00+07:00"}
 {"event_id": "e011", "user_id": "uu", "event": "purchase", "amount": 15.0, "ts": "2026-01-13T11:00:00+07:00"}
 
