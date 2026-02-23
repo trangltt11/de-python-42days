@@ -33,7 +33,7 @@ print(a)
 print("========dem so dong====================")
 print(a.shape[0])
 print("==========tinh tong so amoun cua event purchase==================")
-sum_amount=df["amount"].sum()
+sum_amount=a["amount"].sum()
 print(sum_amount)
 """Level 3 (vừa → khó)
 
@@ -44,7 +44,7 @@ purchase_count (số purchase)
 purchase_total (tổng amount purchase)
 
 Gợi ý: dùng df[df["event"]=="purchase"].groupby("user_id")..."""
-def caculate_df (type_event:str, path: Path )-> pd:
+def caculate_df (type_event:str, path: Path )->  pd.DataFram:
     
     df=pd.read_json(path, lines=True)
     mask_event=df["event"].astype(str).str.strip().str.lower()== type_event.lower()
@@ -75,16 +75,20 @@ def df_to_parquet(path: Path)-> None:
     df=pd.read_json(path, lines=True)
     df_unique=df.drop_duplicates(subset=["event_id"],keep='first').copy()
     df_unique["event_date"]= pd.to_datetime(df_unique["ts"], errors="coerce").dt.strftime("%Y-%m-%d")
-
+    PROJECT_ROOT = Path(__file__).resolve().parents[2]   # .../de-python-42days
+    out_root = PROJECT_ROOT / "data" / "processed" / "day8"
     for i in df_unique["event_date"].unique() :
         str_Date=df_unique[df_unique["event_date"]==i]
         print(f"------------{i}------------------")
         print(str_Date)
-        PROJECT_ROOT = Path(__file__).resolve().parents[2]   # .../de-python-42days
-        out_path = PROJECT_ROOT / "data" / "processed" / "day8"/ f"date={i}"
+        
+        out_dir = out_root / f"date={i}"
+        out_dir.mkdir(parents=True, exist_ok=True)
+
+        out_file = out_dir / "events.parquet"
         print(f"------------------------------------")
-        print(out_path)
-        str_Date.to_parquet(out_path, index=False)
+        print(out_file)
+        str_Date.to_parquet(out_file, index=False)
     
 
 df_to_parquet(path)
