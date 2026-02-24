@@ -1,24 +1,31 @@
 from __future__ import annotations
-
+from datetime import datetime, timezone
 from pathlib import Path
 import pandas as pd
+records=[{"event_id":"e001","user_id":"u1","event":"Purchase","amount":120.5,"ts":"2026-01-11T09:05:00+07:00"},
+{"event_id":"e002","user_id":"u1","event":"Purchase","amount":120.5,"ts":"2026-01-11T09:05:00+07:00"},
+{"event_id":"e003","user_id":"u2","event":"purchase","amount":75.0,"ts":"2026-01-11T09:05:00+07:00"},
+{"event_id":"e004","user_id":"u2","event":"purchase","amount":75.0,"ts":"2026-01-11T09:05:00+07:00"},
+{"event_id":"e005","user_id":"u1","event":"purchase","amount":30.0,"ts":"2026-01-13T10:01:00+07:00"},
+{"event_id":"e006","user_id":"u3","event":"refund","amount":-30.0,"ts":"2026-01"},
+{"event_id":"e007","user_id":"u3","event":"purchase","amount":200.0,"ts":"2026-01-14T10:12:00+07:00"},
+{"event_id":"e008","user_id":"u3","event":"purchase","amount":200.0,"ts":"2026-01-12T10:12:00+07:00"},
+{"event_id":"e008","user_id":"u3","event":"purchase","amount":200.0,"ts":"2026-01-11T10:12:00+07:00"},
+{"event_id":"e009","user_id":"u2","event":"purchase","amount":15.0,"ts":"2026-01-10T11:00:00+07:00"},
+{"event_id":"ae09","user_id":"u2","event":"purchase","amount":15.0,"ts":"2026-01-10T11:00:00+07:00"},
+{"event_id": "e010", "user_id": "u2", "event": "purchase", "amount": 15.0, "ts": "2026-01-13T11:00:00+07:00"},
+{"event_id": "e011", "user_id": "uu", "event": "purchase", "amount": 15.0, "ts": "2026-01-13T11:00:00+07:00"}]
 
-root = Path(__file__).resolve().parents[1]  # de-python-42days
-print(root)
-events_path = root / "data" / "raw" / "day2_events.jsonl"
 
-users_path = root / "data" / "raw" / "day9_users.csv"
+df = pd.DataFrame(records)
+
+df_unique=df.drop_duplicates(subset=["event_id"],keep='first').copy()
+df_unique["event_date"]= pd.to_datetime(df_unique["ts"], errors="coerce").dt.strftime("%Y-%m-%d")
+print(df_unique)
+parquet_df: dict[str, list[dict]]={}
+print("------------------------------")
 
 
 
-import pandas as pd
-
-data = [
-    {"user_id": "u1", "user_name": "An", "segment": "VIP"},
-    {"user_id": "u2", "user_name": "Binh", "segment": "Normal"},
-    {"user_id": "u3", "user_name": "Chi", "segment": "VIP"},
-    {"user_id": "u4", "user_name": "Duy", "segment": "Normal"},
-]
-
-df = pd.DataFrame(data)
-df.to_csv(users_path, index=False)
+a=df_unique.loc[df_unique["event"]=="purchase"]
+print(a)
