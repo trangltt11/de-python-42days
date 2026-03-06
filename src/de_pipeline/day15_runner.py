@@ -11,11 +11,12 @@ def main() -> None:
         bad_root=root / "data" / "bad" / "day15"
     )
 
-    stats = run_def(paths)
+    stats, report_js = run_def(paths)
     print("=== DAY15 STATS ===")
     print(stats)
     print("Processed root:", paths.processed_root)
     print("Bad root:", paths.bad_root)
+    print ("report_js: ",report_js)
 
 
 if __name__ == "__main__":

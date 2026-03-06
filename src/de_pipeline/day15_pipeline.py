@@ -40,7 +40,7 @@ def extract_date(ts: Any) -> str:
     return "unknown"
 
 
-def transform(records: list[Record]) -> tuple[list[Record], list[Record], list[Record]]:
+def transform(records: list[Record]) -> tuple[list[Record], list[Record], list[Record], list[object]]:
     """
     Transform: dedupe + normalize + validate.
     Return: (valid_records, invalid_records)
@@ -56,7 +56,7 @@ def transform(records: list[Record]) -> tuple[list[Record], list[Record], list[R
     bad_root=root / "data" / "bad" / "day15.jsonl"
     valid, results = validate_records(normalized, bad_root)
     invalid = [r for r, res in zip(normalized, results) if not res.ok]
-    return valid, invalid,deduped
+    return valid, invalid,deduped, results
 
 
 def load(paths: PipelinePaths, valid: list[Record], invalid: list[Record]) -> None:
@@ -97,12 +97,24 @@ def load(paths: PipelinePaths, valid: list[Record], invalid: list[Record]) -> No
    
 
 
-def run_def(paths: PipelinePaths) -> dict[str, int]:
+def run_def(paths: PipelinePaths) -> tuple[dict[str, int], list[dict[str, dict[str, int]]]]:
     """Orchestrator: chạy ETL và trả về stats."""
     records = extract(paths)
-    valid, invalid, deduped = transform(records)
+    valid, invalid, deduped, results = transform(records)
     load(paths, valid, invalid)
     partitions_written=set()
+    
+    #tinh loi
+    for i in results :
+        i=0
+        error_set=set()
+        err_list=dict[str,int]={}
+        if i.ok==False:
+            if i.error_type not in error_set:
+                i=i+1
+                error_set.add(error_set)
+                
+    
     for r in valid:
         ts= extract_date(r.get("ts"))
         partitions_written.add(ts)
@@ -113,4 +125,16 @@ def run_def(paths: PipelinePaths) -> dict[str, int]:
         "invalid_records": len(invalid),
         "deduped_records": len(deduped),
         "partitions_written": len(partitions_written)
-    }
+    }, ["input": {
+            "source": {paths.input_jsonl},
+            "total_records": len(records),
+            "deduped_records": len(deduped)
+                }     ,
+        "output": {
+            "valid_records": len(valid),
+            "invalid_records": len(invalid),
+            "partitions_written": len(partitions_written)
+        },
+        "error_types": {
+                
+        }]

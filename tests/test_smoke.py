@@ -1,31 +1,65 @@
-from __future__ import annotations
-from datetime import datetime, timezone
 from pathlib import Path
-import pandas as pd
-records=[{"event_id":"e001","user_id":"u1","event":"Purchase","amount":120.5,"ts":"2026-01-11T09:05:00+07:00"},
-{"event_id":"e002","user_id":"u1","event":"Purchase","amount":120.5,"ts":"2026-01-11T09:05:00+07:00"},
-{"event_id":"e003","user_id":"u2","event":"purchase","amount":75.0,"ts":"2026-01-11T09:05:00+07:00"},
-{"event_id":"e004","user_id":"u2","event":"purchase","amount":75.0,"ts":"2026-01-11T09:05:00+07:00"},
-{"event_id":"e005","user_id":"u1","event":"purchase","amount":30.0,"ts":"2026-01-13T10:01:00+07:00"},
-{"event_id":"e006","user_id":"u3","event":"refund","amount":-30.0,"ts":"2026-01"},
-{"event_id":"e007","user_id":"u3","event":"purchase","amount":200.0,"ts":"2026-01-14T10:12:00+07:00"},
-{"event_id":"e008","user_id":"u3","event":"purchase","amount":200.0,"ts":"2026-01-12T10:12:00+07:00"},
-{"event_id":"e008","user_id":"u3","event":"purchase","amount":200.0,"ts":"2026-01-11T10:12:00+07:00"},
-{"event_id":"e009","user_id":"u2","event":"purchase","amount":15.0,"ts":"2026-01-10T11:00:00+07:00"},
-{"event_id":"ae09","user_id":"u2","event":"purchase","amount":15.0,"ts":"2026-01-10T11:00:00+07:00"},
-{"event_id": "e010", "user_id": "u2", "event": "purchase", "amount": 15.0, "ts": "2026-01-13T11:00:00+07:00"},
-{"event_id": "e011", "user_id": "uu", "event": "purchase", "amount": 15.0, "ts": "2026-01-13T11:00:00+07:00"}]
+import csv
+import json
+from pathlib import Path
+from typing import Any
 
+codes = [
+"VN0010002","VN0010101","VN0010305","VN0010104","VN0010003","VN0010006","VN0010009","VN0010102",
+"VN0010306","VN0010105","VN0010301","VN0010304","VN0010307","VN0010310","VN0010010","VN0010012",
+"VN0010402","VN0010801","VN0010701","VN0019010","VN0010014","VN0019011","VN0010015","VN0010016",
+"VN0010017","VN0010114","VN0010802","VN0019004","VN0019013","VN0019008","VN0019016","VN0019014",
+"VN0010113","VN0010112","VN0010313","VN0010040","VN0010027","VN0010314","VN0010440","VN0010804",
+"VN0010030","VN0010032","VN0010033","VN0010124","VN0010403","VN0010034","VN0010037","VN0010038",
+"VN0010315","VN0010450","VN0010940","VN0019026","VN0010404","VN0010711","VN0019027","VN0010444",
+"VN0010059","VN0010902","VN0010602","VN0010115","VN0010703","VN0010119","VN0019019","VN0010122",
+"VN0010714","VN0010070","VN0010321","VN0010453","VN0019017","VN0019032","VN0010066","VN0010470",
+"VN0010060","VN0010136","VN0010135","VN0010069","VN0010071","VN0010079","VN0010127","VN0010405",
+"VN0010316","VN0010043","VN0010044","VN0010042","VN0010604","VN0010131","VN0010045","VN0019030",
+"VN0019034","VN0019001","VN0010713","VN0010072","VN0010068","VN0010061","VN0010432","VN0010065",
+"VN0010074","VN0010080","VN0010081","VN0029001","VN0021001","VN0010480","VN0010610","VN0010471",
+"VN0010520","VN0010942","VN0010117","VN0010721","VN0010082","VN0010972","VN0010508","VN0010620",
+"VN0010076","VN0010160","VN0010125","VN0010705","VN0010035","VN0010036","VN0019025","VN0010126",
+"VN0010128","VN0010140","VN0010078","VN0010461","VN0010073","VN0010120","VN0010022","VN0010118",
+"VN0019015","VN0010442","VN0010504","VN0010133","VN0010805","VN0019036","VN0010319","VN0010054",
+"VN0010320","VN0010046","VN0010941","VN0010451","VN0010318","VN0010050","VN0010132","VN0019035",
+"VN0010806","VN0010048","VN0019037","VN0010021","VN0010312","VN0010023","VN0019007","VN0010601",
+"VN0010441","VN0010129","VN0010401","VN0010005","VN0010008","VN0010302","VN0010308","VN0010011",
+"VN0010303","VN0010309","VN0010001","VN0010004","VN0010007","VN0010103","VN0010106","VN0010501",
+"VN0010107","VN0010311","VN0010109","VN0010108","VN0010013","VN0010110","VN0010702","VN0019012",
+"VN0010111","VN0010502","VN0010901","VN0010018","VN0019021","VN0010028","VN0010903","VN0010029",
+"VN0019023","VN0019006","VN0019005","VN0019024","VN0019022","VN0019003","VN0010025","VN0010019",
+"VN0010020","VN0010024","VN0010704","VN0010026","VN0010503","VN0010116","VN0010121","VN0010710",
+"VN0010803","VN0019018","VN0010031","VN0010603","VN0010123","VN0010904","VN0010430","VN0010053",
+"VN0010317","VN0010443","VN0010712","VN0019031","VN0010047","VN0010960","VN0010049","VN0010051",
+"VN0010055","VN0010056","VN0010452","VN0019038","VN0019028","VN0019020","VN0019002","VN0010971",
+"VN0010062","VN0010420","VN0010057","VN0010052","VN0010058","VN0010950","VN0010039","VN0010130",
+"VN0010720","VN0010406","VN0010041","VN0010706","VN0019029","VN0019033","VN0010460","VN0010063",
+"VN0010064","VN0010431","VN0010137","VN0010067","VN0010433","VN0010086","VN0010077","VN0010505",
+"VN0010089","VN0010075","VN0010139","VN0010490","VN0010462","VN0010630","VN0010170","VN0010961",
+"VN0010150","VN0010138","VN0019009","VN0010407"
+]
 
-df = pd.DataFrame(records)
-
-df_unique=df.drop_duplicates(subset=["event_id"],keep='first').copy()
-df_unique["event_date"]= pd.to_datetime(df_unique["ts"], errors="coerce").dt.strftime("%Y-%m-%d")
-print(df_unique)
-parquet_df: dict[str, list[dict]]={}
-print("------------------------------")
-
-
-
-a=df_unique.loc[df_unique["event"]=="purchase"]
-print(a)
+template = """CREATE STREAM CASA_REFUND_IN_{code} WITH (KAFKA_TOPIC='CASA_REFUND_IN_{code}', PARTITIONS=1, REPLICAS=3, VALUE_FORMAT='JSON') AS SELECT
+  CASA_REFUND_IN.ROWKEY ROWKEY,
+  CASA_REFUND_IN.`eventId` `eventId`,
+  CASA_REFUND_IN.`topic` `topic`,
+  CASA_REFUND_IN.`companyId` `companyId`,
+  CASA_REFUND_IN.`serviceId` `serviceId`,
+  CASA_REFUND_IN.`customerId` `customerId`,
+  CASA_REFUND_IN.`debitAccount` `debitAccount`,
+  CASA_REFUND_IN.`creditAccount` `creditAccount`,
+  CASA_REFUND_IN.`refundAmt` `refundAmt`,
+  CASA_REFUND_IN.`campaignId` `campaignId`,
+  CASA_REFUND_IN.`feedBack` `feedBack`,
+  CASA_REFUND_IN.`narrative` `narrative`
+FROM CASA_REFUND_IN CASA_REFUND_IN
+WHERE (CASA_REFUND_IN.`companyId` = '{code}')
+EMIT CHANGES;
+"""
+root = Path(__file__).resolve().parents[2]
+out_dir = root / "data" / "processed" / "day16"
+out_dir.mkdir(parents=True, exist_ok=True)
+for c in codes:
+    print(template.format(code=c))
+    
