@@ -1,5 +1,5 @@
 from pathlib import Path
-from de_pipeline.day15_pipeline import PipelinePaths, run
+from .day15_pipeline import PipelinePaths, run_def
 
 
 def main() -> None:
@@ -8,10 +8,10 @@ def main() -> None:
     paths = PipelinePaths(
         input_jsonl=root / "data" / "raw" / "day2_events.jsonl",
         processed_root=root / "data" / "processed" / "day15",
-        bad_root=root / "data" / "bad" / "day15",
+        bad_root=root / "data" / "bad" / "day15"
     )
 
-    stats = run(paths)
+    stats = run_def(paths)
     print("=== DAY15 STATS ===")
     print(stats)
     print("Processed root:", paths.processed_root)
