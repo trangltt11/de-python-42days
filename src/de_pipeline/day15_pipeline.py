@@ -97,7 +97,7 @@ def load(paths: PipelinePaths, valid: list[Record], invalid: list[Record]) -> No
    
 
 
-def run_def(paths: PipelinePaths) -> tuple[dict[str, int], list[dict[str, dict[str, int]]]]:
+def run_def(paths: PipelinePaths) -> tuple[dict[str, int], dict[str, dict[str, int]]]:
     """Orchestrator: chạy ETL và trả về stats."""
     records = extract(paths)
     valid, invalid, deduped, results = transform(records)
@@ -105,14 +105,15 @@ def run_def(paths: PipelinePaths) -> tuple[dict[str, int], list[dict[str, dict[s
     partitions_written=set()
     
     #tinh loi
+    error_set=set()
+    err_list:dict[str,int]={}
     for i in results :
-        i=0
-        error_set=set()
-        err_list=dict[str,int]={}
         if i.ok==False:
             if i.error_type not in error_set:
-                i=i+1
-                error_set.add(error_set)
+                error_set.add(i.error_type)
+                err_list.setdefault(i.error_type,0)
+            err_list[i.error_type] = err_list.get(i.error_type,0)+1
+            
                 
     
     for r in valid:
@@ -125,7 +126,7 @@ def run_def(paths: PipelinePaths) -> tuple[dict[str, int], list[dict[str, dict[s
         "invalid_records": len(invalid),
         "deduped_records": len(deduped),
         "partitions_written": len(partitions_written)
-    }, ["input": {
+    }, {"input": {
             "source": {paths.input_jsonl},
             "total_records": len(records),
             "deduped_records": len(deduped)
@@ -135,6 +136,4 @@ def run_def(paths: PipelinePaths) -> tuple[dict[str, int], list[dict[str, dict[s
             "invalid_records": len(invalid),
             "partitions_written": len(partitions_written)
         },
-        "error_types": {
-                
-        }]
+        "error_types": err_list }

@@ -17,6 +17,7 @@ def main() -> None:
     print("Processed root:", paths.processed_root)
     print("Bad root:", paths.bad_root)
     print ("report_js: ",report_js)
+     
 
 
 if __name__ == "__main__":
