@@ -1,0 +1,4 @@
+pipeline:
+  input_jsonl: data/raw/day2_events.jsonl
+  processed_root: data/processed
+  bad_root: data/bad
