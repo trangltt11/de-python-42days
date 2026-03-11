@@ -1,0 +1,10 @@
+2026-03-11 21:50:11 | INFO | de_pipeline | [run_id=1a3239ba] start pipeline
+2026-03-11 21:50:11 | INFO | de_pipeline | [run_id=1a3239ba] input=D:\python tutorial\de-python-42days\data\raw\day2_events.jsonl
+2026-03-11 21:50:11 | INFO | de_pipeline | [run_id=1a3239ba] processed_root=D:\python tutorial\de-python-42days\data\processed
+2026-03-11 21:50:11 | INFO | de_pipeline | [run_id=1a3239ba] bad_root=D:\python tutorial\de-python-42days\data\bad
+2026-03-11 21:50:11 | ERROR | de_pipeline | [run_id=1a3239ba] pipeline failed
+Traceback (most recent call last):
+  File "D:\python tutorial\de-python-42days\src\de_pipeline\day17_runner.py", line 30, in main
+    stats = run(paths)
+            ^^^
+NameError: name 'run' is not defined
