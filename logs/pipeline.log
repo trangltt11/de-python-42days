@@ -8,3 +8,76 @@ Traceback (most recent call last):
     stats = run(paths)
             ^^^
 NameError: name 'run' is not defined
+2026-03-12 05:57:13 | INFO | de_pipeline | [run_id=49ec54c7] start pipeline
+2026-03-12 05:57:13 | INFO | de_pipeline | [run_id=49ec54c7] input=D:\python tutorial\de-python-42days\data\raw\day2_events.jsonl
+2026-03-12 05:57:13 | INFO | de_pipeline | [run_id=49ec54c7] processed_root=D:\python tutorial\de-python-42days\data\processed
+2026-03-12 05:57:13 | INFO | de_pipeline | [run_id=49ec54c7] bad_root=D:\python tutorial\de-python-42days\data\bad
+2026-03-12 05:57:13 | ERROR | de_pipeline | [run_id=49ec54c7] pipeline failed
+Traceback (most recent call last):
+  File "D:\python tutorial\de-python-42days\src\de_pipeline\day17_runner.py", line 30, in main
+    stats = run(paths)
+            ^^^
+NameError: name 'run' is not defined
+2026-03-12 05:57:26 | INFO | de_pipeline | [run_id=928d3b5f] start pipeline
+2026-03-12 05:57:26 | INFO | de_pipeline | [run_id=928d3b5f] input=D:\python tutorial\de-python-42days\data\raw\day2_events.jsonl
+2026-03-12 05:57:26 | INFO | de_pipeline | [run_id=928d3b5f] processed_root=D:\python tutorial\de-python-42days\data\processed
+2026-03-12 05:57:26 | INFO | de_pipeline | [run_id=928d3b5f] bad_root=D:\python tutorial\de-python-42days\data\bad
+2026-03-12 05:57:28 | INFO | de_pipeline | [run_id=928d3b5f] stats=({'total_records': 13, 'valid_records': 10, 'invalid_records': 2, 'deduped_records': 12, 'partitions_written': 6}, {'input': {'source': {WindowsPath('D:/python tutorial/de-python-42days/data/raw/day2_events.jsonl')}, 'total_records': 13, 'deduped_records': 12}, 'output': {'valid_records': 10, 'invalid_records': 2, 'partitions_written': 6}, 'error_types': {'RecordValidationError': 2}})
+2026-03-12 05:57:28 | INFO | de_pipeline | [run_id=928d3b5f] done
+2026-03-12 06:04:46 | DEBUG | de_pipeline | debug message...
+2026-03-12 06:04:46 | INFO | de_pipeline | [run_id=bb30bebb] start pipeline
+2026-03-12 06:04:46 | INFO | de_pipeline | [run_id=bb30bebb] input=D:\python tutorial\de-python-42days\data\raw\day2_events.jsonl
+2026-03-12 06:04:46 | INFO | de_pipeline | [run_id=bb30bebb] processed_root=D:\python tutorial\de-python-42days\data\processed
+2026-03-12 06:04:46 | INFO | de_pipeline | [run_id=bb30bebb] bad_root=D:\python tutorial\de-python-42days\data\bad
+2026-03-12 06:04:48 | INFO | de_pipeline | [run_id=bb30bebb] stats=({'total_records': 13, 'valid_records': 10, 'invalid_records': 2, 'deduped_records': 12, 'partitions_written': 6}, {'input': {'source': {WindowsPath('D:/python tutorial/de-python-42days/data/raw/day2_events.jsonl')}, 'total_records': 13, 'deduped_records': 12}, 'output': {'valid_records': 10, 'invalid_records': 2, 'partitions_written': 6}, 'error_types': {'RecordValidationError': 2}})
+2026-03-12 06:04:48 | INFO | de_pipeline | [run_id=bb30bebb] done
+2026-03-12 06:14:20 | INFO | de_pipeline | [run_id=c2807866] start pipeline
+2026-03-12 06:14:20 | INFO | de_pipeline | [run_id=c2807866] input=D:\python tutorial\de-python-42days\data\raw\day2_events.jsonl
+2026-03-12 06:14:20 | INFO | de_pipeline | [run_id=c2807866] processed_root=D:\python tutorial\de-python-42days\data\processed
+2026-03-12 06:14:20 | INFO | de_pipeline | [run_id=c2807866] bad_root=D:\python tutorial\de-python-42days\data\bad
+2026-03-12 06:14:21 | INFO | de_pipeline | [run_id=c2807866] stats=({'total_records': 13, 'valid_records': 10, 'invalid_records': 2, 'deduped_records': 12, 'partitions_written': 6}, {'input': {'source': {WindowsPath('D:/python tutorial/de-python-42days/data/raw/day2_events.jsonl')}, 'total_records': 13, 'deduped_records': 12}, 'output': {'valid_records': 10, 'invalid_records': 2, 'partitions_written': 6}, 'error_types': {'RecordValidationError': 2}})
+2026-03-12 06:14:21 | INFO | de_pipeline | [run_id=c2807866] done
+2026-03-12 07:16:12 | INFO | de_pipeline | [run_id=a495a9f6] start pipeline
+2026-03-12 07:16:12 | INFO | de_pipeline | [run_id=a495a9f6] input=D:\python tutorial\de-python-42days\data\raw\day2_events.jsonl
+2026-03-12 07:16:12 | INFO | de_pipeline | [run_id=a495a9f6] processed_root=D:\python tutorial\de-python-42days\data\processed
+2026-03-12 07:16:12 | INFO | de_pipeline | [run_id=a495a9f6] bad_root=D:\python tutorial\de-python-42days\data\bad
+2026-03-12 07:16:12 | ERROR | de_pipeline | [run_id=a495a9f6] pipeline failed
+Traceback (most recent call last):
+  File "D:\python tutorial\de-python-42days\src\de_pipeline\day17_runner.py", line 32, in main
+    stats = run_def(paths,looger=logger, run_id=run_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: run_def() got an unexpected keyword argument 'looger'
+2026-03-12 07:16:45 | INFO | de_pipeline | [run_id=ab8a1125] start pipeline
+2026-03-12 07:16:45 | INFO | de_pipeline | [run_id=ab8a1125] input=D:\python tutorial\de-python-42days\data\raw\day2_events.jsonl
+2026-03-12 07:16:45 | INFO | de_pipeline | [run_id=ab8a1125] processed_root=D:\python tutorial\de-python-42days\data\processed
+2026-03-12 07:16:45 | INFO | de_pipeline | [run_id=ab8a1125] bad_root=D:\python tutorial\de-python-42days\data\bad
+2026-03-12 07:16:45 | INFO | de_pipeline | [run_id=ab8a1125] extract data at 2026-03-12 07:16:45.431688
+2026-03-12 07:16:45 | INFO | de_pipeline | [run_id=ab8a1125] records data 13
+2026-03-12 07:16:45 | INFO | de_pipeline | [run_id=ab8a1125] transform data at 2026-03-12 07:16:45.434188
+2026-03-12 07:16:45 | INFO | de_pipeline | [run_id=ab8a1125] deduped records data 12
+2026-03-12 07:16:45 | INFO | de_pipeline | [run_id=ab8a1125] valid records data 10
+2026-03-12 07:16:45 | INFO | de_pipeline | [run_id=ab8a1125] invalid records data 2
+2026-03-12 07:16:47 | INFO | de_pipeline | [run_id=ab8a1125] partitions_written records data 6
+2026-03-12 07:16:47 | INFO | de_pipeline | [run_id=ab8a1125] stats=({'total_records': 13, 'valid_records': 10, 'invalid_records': 2, 'deduped_records': 12, 'partitions_written': 6}, {'input': {'source': {WindowsPath('D:/python tutorial/de-python-42days/data/raw/day2_events.jsonl')}, 'total_records': 13, 'deduped_records': 12}, 'output': {'valid_records': 10, 'invalid_records': 2, 'partitions_written': 6}, 'error_types': {'RecordValidationError': 2}})
+2026-03-12 07:16:47 | INFO | de_pipeline | [run_id=ab8a1125] done
+2026-03-12 07:25:41 | INFO | de_pipeline | [run_id=af7a1984] start pipeline
+2026-03-12 07:25:41 | INFO | de_pipeline | [run_id=af7a1984] input=D:\python tutorial\de-python-42days\data\raw\day2_events.jsonl
+2026-03-12 07:25:41 | INFO | de_pipeline | [run_id=af7a1984] processed_root=D:\python tutorial\de-python-42days\data\processed
+2026-03-12 07:25:41 | INFO | de_pipeline | [run_id=af7a1984] bad_root=D:\python tutorial\de-python-42days\data\bad
+2026-03-12 07:25:41 | INFO | de_pipeline | [run_id=af7a1984] extract data at 2026-03-12 07:25:41.441409
+2026-03-12 07:25:41 | INFO | de_pipeline | [run_id=af7a1984] records data 13
+2026-03-12 07:25:41 | INFO | de_pipeline | [run_id=af7a1984] transform data at 2026-03-12 07:25:41.442408
+2026-03-12 07:25:41 | INFO | de_pipeline | [run_id=af7a1984] deduped records data 12
+2026-03-12 07:25:41 | INFO | de_pipeline | [run_id=af7a1984] valid records data 10
+2026-03-12 07:25:41 | INFO | de_pipeline | [run_id=af7a1984] invalid records data 2
+2026-03-12 07:25:41 | INFO | de_pipeline | [run_id=af7a1984] Ghi processed data at 2026-01-11
+2026-03-12 07:25:42 | INFO | de_pipeline | [run_id=af7a1984] Ghi processed data at 2026-01-13
+2026-03-12 07:25:42 | INFO | de_pipeline | [run_id=af7a1984] Ghi processed data at 2026-01-17
+2026-03-12 07:25:42 | INFO | de_pipeline | [run_id=af7a1984] Ghi processed data at 2026-01-14
+2026-03-12 07:25:42 | INFO | de_pipeline | [run_id=af7a1984] Ghi processed data at 2026-01-12
+2026-03-12 07:25:42 | INFO | de_pipeline | [run_id=af7a1984] Ghi processed data at 2026-01-10
+2026-03-12 07:25:42 | INFO | de_pipeline | [run_id=af7a1984] Ghi bad data at 2026-01-10
+2026-03-12 07:25:42 | INFO | de_pipeline | [run_id=af7a1984] Ghi bad data at 2026-01-13
+2026-03-12 07:25:42 | INFO | de_pipeline | [run_id=af7a1984] partitions_written records data 6
+2026-03-12 07:25:42 | INFO | de_pipeline | [run_id=af7a1984] stats=({'total_records': 13, 'valid_records': 10, 'invalid_records': 2, 'deduped_records': 12, 'partitions_written': 6}, {'input': {'source': {WindowsPath('D:/python tutorial/de-python-42days/data/raw/day2_events.jsonl')}, 'total_records': 13, 'deduped_records': 12}, 'output': {'valid_records': 10, 'invalid_records': 2, 'partitions_written': 6}, 'error_types': {'RecordValidationError': 2}})
+2026-03-12 07:25:42 | INFO | de_pipeline | [run_id=af7a1984] done

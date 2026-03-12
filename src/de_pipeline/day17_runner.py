@@ -2,7 +2,7 @@ from pathlib import Path
 import uuid
 
 from .config import load_config
-from .day15_pipeline import PipelinePaths, run_def
+from .day15_pipeline_copy import PipelinePaths, run_def
 from .logging_setup import setup_logging
 
 
@@ -14,6 +14,8 @@ def main() -> None:
     logger = setup_logging(project_root / "logs", level="INFO")
 
     cfg = load_config(project_root, project_root / "configs" / "config.yaml")
+
+    logger.debug("debug message...")
 
     paths = PipelinePaths(
         input_jsonl=cfg.input_jsonl,
@@ -27,7 +29,7 @@ def main() -> None:
     logger.info(f"[run_id={run_id}] bad_root={paths.bad_root}")
 
     try:
-        stats = run(paths)
+        stats = run_def(paths,logger=logger, run_id=run_id)
         logger.info(f"[run_id={run_id}] stats={stats}")
         logger.info(f"[run_id={run_id}] done")
     except Exception:
