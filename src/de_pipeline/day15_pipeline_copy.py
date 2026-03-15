@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+import time
 
 from .types_def import Record
 from .ops import dedupe_by_key, safe_float
@@ -109,18 +110,31 @@ def run_def(paths: PipelinePaths, logger: Optional [logging.Logger] = None,
     """Orchestrator: chạy ETL và trả về stats."""
     if logger:
         logger.info(f"[run_id={run_id}] extract data at {datetime.now()}")
+    start = time.perf_counter()
     records = extract(paths)
+    end = time.perf_counter()
+    if logger:
+        logger.info(f"[run_id={run_id}] extract_time_s data at {end-start}")
+
     if logger:
         logger.info(f"[run_id={run_id}] records data {len(records)}")
         logger.info(f"[run_id={run_id}] transform data at {datetime.now()}")
+    start = time.perf_counter()
     valid, invalid, deduped, results = transform(records)
+    end = time.perf_counter()
+    if logger:
+        logger.info(f"[run_id={run_id}] transform_time_s data at {end-start}")
+
     if logger:
         logger.info(f"[run_id={run_id}] deduped records data {len(deduped)}")
         logger.info(f"[run_id={run_id}] valid records data {len(valid)}")
         logger.info(f"[run_id={run_id}] invalid records data {len(invalid)}")
 
-
+    start = time.perf_counter()
     load(paths, valid, invalid, logger=logger, run_id=run_id)
+    end = time.perf_counter()
+    if logger:
+        logger.info(f"[run_id={run_id}] load_time_s data at {end-start}")
     partitions_written=set()
     
     #tinh loi
