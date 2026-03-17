@@ -2,17 +2,29 @@ from pathlib import Path
 
 from .config import load_config
 from .day15_pipeline import PipelinePaths, run_def
+<<<<<<< HEAD
+=======
+from .file_io import read_jsonl, write_jsonl, write_parquet
+>>>>>>> e0a305e2682f22341757ec4d8bd7e489b3c34350
 
 
 def main() -> None:
     project_root = Path(__file__).resolve().parents[2]
+    
+    
     cfg = load_config(project_root, project_root / "configs" / "config.yaml")
-
+    
     paths = PipelinePaths(
         input_jsonl=cfg.input_jsonl,
         processed_root=cfg.processed_root,
         bad_root=cfg.bad_root,
     )
+    print("-------------------------------------")
+    print(paths.input_jsonl)
+    print("-------------------------------------")
+    records=read_jsonl(paths.input_jsonl)
+    print("-------------------------------------")
+    print(records)
 
     stats = run_def(paths)
     print("=== DAY16 STATS ===")

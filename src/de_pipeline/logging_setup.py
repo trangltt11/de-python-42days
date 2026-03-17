@@ -14,9 +14,14 @@ def setup_logging(log_dir: Path, level: str = "INFO") -> logging.Logger:
     log_dir.mkdir(parents=True, exist_ok=True)
     log_file = log_dir / "pipeline.log"
 
+<<<<<<< HEAD
     logger = logging.getLogger("de_pipeline")
     logger.setLevel(getattr(logging, level.upper(), logging.INFO))
     """ getattr: lay value cua thuoc tinh trong object"""
+=======
+    logger = logging.getLogger("de_pipeline")# tao object cua class Logging
+    logger.setLevel(getattr(logging, level.upper(), logging.INFO))
+>>>>>>> e0a305e2682f22341757ec4d8bd7e489b3c34350
 
     # tránh add handler nhiều lần nếu chạy lại trong notebook/IDE
     if logger.handlers:
