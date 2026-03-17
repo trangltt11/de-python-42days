@@ -49,6 +49,8 @@ def main() -> None:
     # 6) Insert (batch) trong transaction
     # Convert df -> list[dict]
     rows = df[["event_id", "user_id", "event", "amount", "ts"]].to_dict(orient="records")
+    print("dataaaaaaaaaaaa rawwwwwwwwwwww")
+    print(rows)
 
     with engine.begin() as conn:
         # Optional: xoá hết để chạy lại không bị trùng (idempotent cho demo)
@@ -132,8 +134,49 @@ def main() -> None:
         u1_output=get_user_events(conn,"u1")
         print("\nqlist events cho user user_id='u1'")
         print(u1_output)
+        """tạo thêm table daily_kpi:
 
+        event_date, total_events, purchase_total
+
+        Insert kết quả aggregate theo ngày vào bảng này."""
+        daily_kpi = Table(
+        "daily_kpi",
+        metadata,
+        Column("event_date", String, nullable=False),
+        Column("total_events", Float, nullable=False),
+        Column("purchase_total", Float, nullable=False),
+        )
+        #TAO TABLE NEU CHUA CO
+        metadata.create_all(engine)
+        before_cnt = conn.execute(select(func.count()).select_from(daily_kpi)).scalar_one()
+        print("before insert:", before_cnt)
         
+        stmt6 = daily_kpi.insert().from_select(
+        ["event_date", "total_events", "purchase_total"],
+        select(
+           func.strftime("%d-%m-%Y", events.c.ts).label("event_date"),
+           func.count(events.c.event_id).label("total_events"),
+           func.sum(events.c.amount).label("purchase_total"),
+        )
+        .where(events.c.event == "purchase")
+        .group_by(func.strftime("%d-%m-%Y", events.c.ts))
+         )
+
+        conn.execute(stmt6)
+        
+
+        after_cnt = conn.execute(select(func.count()).select_from(daily_kpi)).scalar_one()
+        print("after insert:", after_cnt)
+
+        stmt7=(select(daily_kpi)
+               .select_from(daily_kpi)
+               )
+        results7 = conn.execute(stmt7)
+        print("\nquery tất cả record của daily_kpi")
+        for row in results7:
+            print(dict(row._mapping))
+
+
 
 if __name__ == "__main__":
     main()
