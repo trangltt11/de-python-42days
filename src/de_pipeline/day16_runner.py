@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from de_pipeline.config import load_config
-from de_pipeline.day15_pipeline import PipelinePaths, run
+from .config import load_config
+from .day15_pipeline import PipelinePaths, run_def
 
 
 def main() -> None:
@@ -14,7 +14,7 @@ def main() -> None:
         bad_root=cfg.bad_root,
     )
 
-    stats = run(paths)
+    stats = run_def(paths)
     print("=== DAY16 STATS ===")
     print(stats)
     print("input:", paths.input_jsonl)

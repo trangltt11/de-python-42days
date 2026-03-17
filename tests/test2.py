@@ -1,1 +1,3 @@
-import test_smoke
+import logging
+
+print(getattr(logging, "INFO"))
