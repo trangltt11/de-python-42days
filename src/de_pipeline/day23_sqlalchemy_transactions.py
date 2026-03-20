@@ -1,5 +1,5 @@
 from __future__ import annotations
-
+from datetime import datetime, timezone
 from pathlib import Path
 import pandas as pd
 from sqlalchemy import (
@@ -82,6 +82,14 @@ def get_purchase_kpi_by_user(conn) -> list[dict]:
     rows = conn.execute(sql, {"event": "purchase"}).mappings().all()
     return [dict(r) for r in rows]
 
+""""Viết function get_events_by_event(conn, event: str) dùng parameterized query để lấy tất cả record theo event. """
+def get_events_by_event (conn, event:str) -> list[dict]:
+    sql= text(""" 
+             SELECT *
+        FROM events
+        WHERE upper(event)= upper(:event) """)
+    rows= conn.execute(sql, {"event":event}).mappings().all()
+    return [dict(r) for r in rows]
 
 def main() -> None:
     root = Path(__file__).resolve().parents[2]
@@ -123,7 +131,71 @@ def main() -> None:
         print("\nPurchase KPI by user:")
         for r in kpi:
             print(r)
+        event =get_events_by_event (conn, "purchase")
+        print("\nPurchase KPI by user:")
+        for r in event:
+            print(r)
+        """Thêm filter theo time range:
 
+            input: start_ts, end_ts
 
+            query: WHERE ts >= :start AND ts < :end"""
+        def filer_time_range(conn, start_ts: datetime, end_ts: datetime)-> list[dict]:
+            sql=( 
+                select(events)
+                .select_from (events)
+                .where((events.c.ts>= start_ts) & (events.c.ts<= end_ts)) )
+            rows=conn.execute(sql).mappings().all()
+            return [dict(r) for r in rows]
+        start_ts= "2026/01/01 10:30:00"
+        end_ts= "2026/01/13 10:30:00"
+        time_range=filer_time_range(conn, datetime.strptime(start_ts, "%Y/%m/%d %H:%M:%S"), datetime.strptime(end_ts, "%Y/%m/%d %H:%M:%S"))
+        print("\n print filter theo time range")
+        for i in time_range:
+            print(i)
+        """Tạo table daily_kpi:
+
+            event_date (YYYY-MM-DD), total_events, purchase_total
+
+            Mỗi lần chạy: upsert daily_kpi theo event_date"""
+        daily_kpi = Table(
+        "daily_kpi",
+        metadata,
+        Column("event_date", String, nullable=False, primary_key=True),
+        Column("total_events", Float, nullable=False),
+        Column("purchase_total", Float, nullable=False),
+        )
+        #TAO TABLE NEU CHUA CO
+        metadata.create_all(engine)
+
+        sql=(select(
+           func.strftime("%d-%m-%Y", events.c.ts).label("event_date"),
+           func.count(events.c.event_id).label("total_events"),
+           func.sum(events.c.amount).label("purchase_total"),
+        )
+        .where(events.c.event == "purchase")
+        .group_by(func.strftime("%d-%m-%Y", events.c.ts)))
+        rs= conn.execute(sql).mappings().all() 
+
+        rows= [dict(r) for r in rs]
+    
+        stmt = sqlite_insert(daily_kpi).values(rows)
+        stmt = stmt.on_conflict_do_update(
+        index_elements=[daily_kpi.c.event_date],
+        set_={
+            "event_date": stmt.excluded.event_date,
+            "total_events": stmt.excluded.total_events,
+            "purchase_total": stmt.excluded.purchase_total
+        },
+        )
+        result = conn.execute(stmt)
+
+        sql=(select(daily_kpi)
+             .select_from(daily_kpi))
+        rows=conn.execute(sql).mappings().all()
+        print("\n print daily_kpi")
+        for i in rows :
+            print (dict(i))
+        
 if __name__ == "__main__":
     main()
