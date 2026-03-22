@@ -5,3 +5,16 @@ requires-python = ">=3.10"
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = ["E", "F", "I"]   # E: style errors, F: pyflakes, I: import sorting
+fix = true
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

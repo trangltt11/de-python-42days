@@ -158,6 +158,8 @@ def main() -> None:
             event_date (YYYY-MM-DD), total_events, purchase_total
 
             Mỗi lần chạy: upsert daily_kpi theo event_date"""
+        conn.execute(text("DROP TABLE IF EXISTS daily_kpi"))
+         
         daily_kpi = Table(
         "daily_kpi",
         metadata,
