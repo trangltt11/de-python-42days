@@ -80,6 +80,8 @@ def main() -> None:
     print("\nWrote:", out_file)
     print("Rows:", len(df))
 
+    
+
 
 if __name__ == "__main__":
     main()

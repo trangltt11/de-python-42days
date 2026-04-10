@@ -7,6 +7,50 @@ import pyarrow.json as pajson
 import pyarrow.parquet as pq
 import pandas as pd
 
+def first_occurrence_indices(table: pa.Table, key_col: str) -> pa.Array:
+    table = table.combine_chunks()
+    key_arr = table[key_col].combine_chunks()
+    # 1) encode key -> codes
+    codes = pc.dictionary_encode(key_arr).indices
+    print("------------------------codes--------------")
+    print(codes)
+    # 2) sort theo codes
+    order = pc.sort_indices(codes)
+    codes_sorted = pc.take(codes, order)
+
+    # 3) first occurrence mask trên codes_sorted
+    #prev = pc.shift(codes_sorted, 1)
+    x = 0
+    prev = pa.array([None], type=pa.int64())
+
+    while x < len(codes_sorted)-1:
+        new = pa.array([codes_sorted[x].as_py()], type=pa.int64())
+        prev = pa.concat_arrays([prev, new])
+        x = x + 1
+
+    print("-----------------------prev---------------------")
+    print (prev)
+    print(codes_sorted) 
+    is_first_sorted = pc.if_else(
+    pc.is_null(prev),
+    pa.scalar(True),
+    pc.not_equal(codes_sorted, prev)
+)
+    print("------------------------------is_first_sorted------------")
+    print(is_first_sorted)
+
+    # 4) lấy index (row index) của các dòng first (theo bảng gốc)
+    first_pos_sorted = pc.filter(order, is_first_sorted)
+    print("------------------------------first_pos_sorted------------")
+    print(first_pos_sorted)
+    # 5) nếu muốn giữ đúng thứ tự xuất hiện ban đầu
+    first_pos = pc.take(first_pos_sorted, pc.sort_indices(first_pos_sorted))
+    return first_pos
+
+def dedupe_keep_first(table: pa.Table, key_col: str) -> pa.Table:
+    idx = first_occurrence_indices(table, key_col)
+    return table.take(idx)
+    
 def main() -> None:
     root = Path(__file__).resolve().parents[2]
     in_path = root / "data" / "raw" / "day2_events.jsonl"
@@ -65,6 +109,14 @@ def main() -> None:
 
     print("\n=== TARGET SCHEMA ===")
     print(out_table.schema)
+    print("\n=== out_table ===")
+    table_depu=dedupe_keep_first(out_table,"event_id") 
+
+    print("----------------table_depu---------------------") 
+
+    print(table_depu) 
+    print("before dedupe", len(out_table)) 
+    print("after dedupe", len(table_depu)) 
 
     # 5) Dedupe event_id (giữ dòng đầu): Arrow không có drop_duplicates như pandas
     # Ta làm cách đơn giản: dùng pyarrow.compute để lấy unique mask.
@@ -94,7 +146,39 @@ def main() -> None:
 
         Tự viết dedupe bằng Arrow (gợi ý: dùng dictionary encode + first occurrence mask).
         (Nếu bạn muốn, mình sẽ đưa version arrow-only.)"""
-    
+    ts_col = table_depu["ts"]
+    not_null_ts = pc.invert(pc.is_null(ts_col))
+    table_depu = table_depu.filter(not_null_ts)
+    ts_col = table_depu["ts"]
+    year = pc.strftime(ts_col, format="%Y")
+    month = pc.strftime(ts_col, format="%m")
+    day = pc.strftime(ts_col, format="%d")
+
+    # 6) Tạo key "YYYY-MM-DD" để group (Arrow-only)
+    ymd = pc.binary_join_element_wise([year, month, day], "-")
+    print("-----------------ymd------------")
+    print(ymd)
+    unique_keys = pc.unique(ymd)  # Arrow Array các key unique
+
+    # 7) Loop từng partition và write parquet (schema luôn giống nhau)
+    for key in unique_keys.to_pylist():
+        mask = pc.equal(ymd, pa.scalar(key))
+        part = out_table.filter(mask)
+
+        y, m, d = key.split("-")
+        part_dir = out_root / f"year={y}" / f"month={m}" / f"day={d}"
+
+        # idempotent (tuỳ chọn): xoá partition cũ rồi ghi lại
+        if part_dir.exists():
+            shutil.rmtree(part_dir)
+        part_dir.mkdir(parents=True, exist_ok=True)
+
+        out_file = part_dir / "events.parquet"
+        pq.write_table(part, out_file)  # part đã đúng target_schema
+
+        print(f"Wrote {part.num_rows} rows -> {out_file}")
+
+    print("DONE. Output root:", out_root)
 
 if __name__ == "__main__":
     main()

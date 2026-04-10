@@ -1,14 +1,14 @@
-from typing import Any
-import json
-from pathlib import Path
+import pyarrow as pa
+import pyarrow.compute as pc
 
-Record = dict[str, Any]
-path= Path(r"D:\python tutorial\de-python-42days\data\raw\day13_events.csv")
-records: list[Record] = []
-with path.open("r", encoding="utf-8") as f:
-    for line in f:
-        line = line.strip()
-        if not line:
-            continue
-        records.append(json.loads(line))
-print(records)
+arr = pa.array(["2026-01-10", "2026-01-11"])
+
+# Case 1: loop trực tiếp
+print("---- Loop Arrow Array ----")
+for key in arr:
+    print(key, type(key))
+
+# Case 2: dùng to_pylist()
+print("\n---- Loop Python list ----")
+for key in arr.to_pylist():
+    print(key, type(key))
