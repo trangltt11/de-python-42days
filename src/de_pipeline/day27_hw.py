@@ -6,6 +6,7 @@ import pyarrow.compute as pc
 import pyarrow.json as pajson
 import pyarrow.parquet as pq
 import pandas as pd
+import shutil
 
 def first_occurrence_indices(table: pa.Table, key_col: str) -> pa.Array:
     table = table.combine_chunks()
@@ -83,9 +84,20 @@ def main() -> None:
     # 3.3 ts: cast sang string trước, rồi parse timestamp
     # JSON reader đôi khi đã parse, nhưng ta làm chắc chắn
     ts_str = pc.cast(table["ts"], pa.string())
-    # parse ISO8601 -> timestamp (nếu lỗi -> null)
-    ts_parsed = pc.strptime(ts_str, format="%Y-%m-%dT%H:%M:%S%z", unit="ns", error_is_null=True)
+    print("===ts_str ===")
+    print(ts_str)
+    ts_no_tz = pc.utf8_slice_codeunits(ts_str, 0, 19)
 
+    ts_parsed = pc.strptime(
+    ts_no_tz,
+    format="%Y-%m-%dT%H:%M:%S",
+    unit="ns",
+    error_is_null=True
+)
+    # parse ISO8601 -> timestamp (nếu lỗi -> null)
+    #ts_parsed = pc.strptime(ts_str,  format="%Y-%m-%dT%H:%M:%S%z", unit="ns", error_is_null=True)
+    print("===ts_parsed ===")
+    print(ts_parsed)
     # Convert timezone (strptime trả timestamp without tz or with offset handling tùy version)
     # Ta chuẩn hoá về Asia/Bangkok nếu tzinfo chưa có:
     # (nếu bạn thấy schema ts chưa có tz, có thể bỏ 2 dòng dưới và giữ timestamp("ns") thôi)
@@ -93,6 +105,8 @@ def main() -> None:
     # Cách an toàn: giữ ts_parsed dạng timestamp("ns") rồi set tz khi viết schema.
     # Ở đây mình cast lại theo schema target (ts), nếu không phù hợp thì sẽ raise -> bạn sẽ thấy ngay.
     ts_final = pc.cast(ts_parsed, pa.timestamp("ns", tz="Asia/Bangkok"), safe=False)
+    print("===ts_final ===")
+    print(ts_final)
     ingest_date = pc.utf8_slice_codeunits(ts_str,0,10)
     # 4) Build table theo schema target
     out_table = pa.Table.from_arrays(
@@ -110,13 +124,13 @@ def main() -> None:
     print("\n=== TARGET SCHEMA ===")
     print(out_table.schema)
     print("\n=== out_table ===")
+    print(out_table)
     table_depu=dedupe_keep_first(out_table,"event_id") 
 
     print("----------------table_depu---------------------") 
 
     print(table_depu) 
-    print("before dedupe", len(out_table)) 
-    print("after dedupe", len(table_depu)) 
+   
 
     # 5) Dedupe event_id (giữ dòng đầu): Arrow không có drop_duplicates như pandas
     # Ta làm cách đơn giản: dùng pyarrow.compute để lấy unique mask.
@@ -138,27 +152,36 @@ def main() -> None:
 
     Sửa schema: thêm cột ingest_date (string) = YYYY-MM-DD từ ts.
     Gợi ý: dùng pandas hoặc arrow compute strftime."""
-    print("\n=== df ===")
-    print (df)
+    print("\n=== table_depu ===")
+    print (table_depu["ts"])
     """Level 3 (vừa → khó)
 
         Không dùng pandas để dedupe nữa:
 
         Tự viết dedupe bằng Arrow (gợi ý: dùng dictionary encode + first occurrence mask).
         (Nếu bạn muốn, mình sẽ đưa version arrow-only.)"""
-    ts_col = table_depu["ts"]
+    ts_col = pc.cast(table_depu["ts"], pa.timestamp("ns"))
+    print("\n=== ts_col ===")
+    print(table_depu["ts"])
+
     not_null_ts = pc.invert(pc.is_null(ts_col))
     table_depu = table_depu.filter(not_null_ts)
-    ts_col = table_depu["ts"]
-    year = pc.strftime(ts_col, format="%Y")
-    month = pc.strftime(ts_col, format="%m")
-    day = pc.strftime(ts_col, format="%d")
+    print("\n=== table_depu ===")
+    print (table_depu)
+    ts_col = pc.filter(ts_col, not_null_ts)
 
-    # 6) Tạo key "YYYY-MM-DD" để group (Arrow-only)
-    ymd = pc.binary_join_element_wise([year, month, day], "-")
-    print("-----------------ymd------------")
+    print("\n=== ts_col new ===")
+    print(ts_col)
+
+    year = pc.utf8_slice_codeunits(ts_str, 0, 4)
+    month = pc.utf8_slice_codeunits(ts_str, 5, 7)
+    day = pc.utf8_slice_codeunits(ts_str, 8, 10)
+
+    ymd = pc.binary_join_element_wise(year, month, day, "-")
+    print("\n=== ymd ===")
     print(ymd)
-    unique_keys = pc.unique(ymd)  # Arrow Array các key unique
+
+    unique_keys = pc.unique(ymd)
 
     # 7) Loop từng partition và write parquet (schema luôn giống nhau)
     for key in unique_keys.to_pylist():
@@ -166,7 +189,7 @@ def main() -> None:
         part = out_table.filter(mask)
 
         y, m, d = key.split("-")
-        part_dir = out_root / f"year={y}" / f"month={m}" / f"day={d}"
+        part_dir = out_dir / f"year={y}" / f"month={m}" / f"day={d}"
 
         # idempotent (tuỳ chọn): xoá partition cũ rồi ghi lại
         if part_dir.exists():
@@ -178,7 +201,12 @@ def main() -> None:
 
         print(f"Wrote {part.num_rows} rows -> {out_file}")
 
-    print("DONE. Output root:", out_root)
+    print("DONE. Output root:", out_dir)
 
 if __name__ == "__main__":
     main()
+
+
+# doc du lieu file parquet
+table = pq.read_table("data/processed/day27/year=2026/month=01/day=11/events.parquet")
+print(table)
