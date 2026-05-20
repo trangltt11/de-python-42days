@@ -1,13 +1,13 @@
-import pyarrow as pa
+from pathlib import Path
+import pandas as pd
 
-codes_sorted = pa.array([1, 2, 2, 5, 6])
-x = 0
-prev = pa.array([None], type=pa.int64())
+root = Path(r"E:\py file\LEAR PYTHON\de-python-42days\data\processed\day28")
 
-while x < len(codes_sorted)-1:
-    new = pa.array([codes_sorted[x].as_py()], type=pa.int64())
-    print(new)
-    prev = pa.concat_arrays([prev, new])
-    x = x + 1
+dfs = []
 
-print(prev)
+for parquet_file in root.rglob("*.parquet"):
+    df = pd.read_parquet(parquet_file)
+    dfs.append(df)
+
+all_df = pd.concat(dfs, ignore_index=True)
+print(all_df)
