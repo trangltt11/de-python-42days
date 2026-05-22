@@ -1,0 +1,50 @@
+{
+  "generated_at": "2026-05-22T07:17:51",
+  "input": {
+    "db_path": "D:\\python tutorial\\de-python-42days\\data\\processed\\day28\\events.db"
+  },
+  "summary": {
+    "status": "PASS",
+    "error_failed": []
+  },
+  "checks": [
+    {
+      "name": "unique_event_id",
+      "passed": true,
+      "severity": "ERROR",
+      "details": {
+        "total_rows": 11,
+        "distinct_event_id": 11,
+        "duplicates": 0
+      }
+    },
+    {
+      "name": "event_domain",
+      "passed": true,
+      "severity": "ERROR",
+      "details": {
+        "allowed": [
+          "view",
+          "purchase",
+          "refund"
+        ],
+        "invalid_values": []
+      }
+    },
+    {
+      "name": "amount_rules",
+      "passed": true,
+      "severity": "ERROR",
+      "details": {
+        "bad_purchase_amount_le_0": 0,
+        "bad_view_amount_ne_0": 0,
+        "bad_refund_amount_ge_0": 0
+      }
+    }
+  ],
+  "outputs": {
+    "kpi_by_event": "D:\\python tutorial\\de-python-42days\\data\\processed\\week4_reports\\kpi_by_event.parquet",
+    "kpi_purchase_by_user": "D:\\python tutorial\\de-python-42days\\data\\processed\\week4_reports\\kpi_purchase_by_user.parquet",
+    "dq_report": "D:\\python tutorial\\de-python-42days\\data\\processed\\week4_reports\\dq_report.json"
+  }
+}
